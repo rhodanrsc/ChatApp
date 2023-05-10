@@ -1,9 +1,20 @@
 import React from "react";
+import axios from 'axios';
 
-const AuthPage = () => {
+const AuthPage = (props) => {
+
+    const onSubmit = (e) => {
+        e.preventDefault();
+        const { value } = e.target[0];
+        axios.post("http://localhost:3001/authenticate", { username: value })
+        .then( r => props.onAuth({ ...r.data, secret: value }))
+        .catch( e => console.log('error', e) );
+        props.onAuth({ username: value, secret: value });
+    }
+
     return(
         <div className="authpage">
-            <div className="loginbox">
+            <form onSubmit={onSubmit} className="loginbox">
                 <div className="welcome">
                     <span className="title">Welcome!</span>
                     <br/>
@@ -14,7 +25,7 @@ const AuthPage = () => {
                     <input className="user" type="text" />
                     <button className="submit" type="submit">=&gt;</button>
                 </div>
-            </div>
+            </form>
         </div>
     );
 }
